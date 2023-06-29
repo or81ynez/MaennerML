@@ -29,18 +29,35 @@ Schwerpunkt der App : #
   
 # 2.Technologien und Tools
 
+* Sensor Logger App : Für Datenerfassung
+* Google Drive : Teilen der Daten für andere Teammitglieder
+* Google Colab : Für die Zusammenarbeit am Code
+* Python : Zum Codieren
+* Streamlit : App Veröffentlichung
+* 
+
 
 
 # 3.Datenerfassung 
 
-![IMG_2953](https://github.com/or81ynez/MaennerML/assets/131467070/5e91b805-4fe8-4473-ae8a-e73305cfd540)
-![IMG_2955](https://github.com/or81ynez/MaennerML/assets/131467070/f9fe43f1-f7af-45c7-9518-98d1d57f6811)
+* Daten erfassung unterschiedlichen Verkehrmittel mit der "Sensor Logger"  App
+  
+<img width="334" alt="Bildschirmfoto 2023-06-29 um 17 42 12" src="https://github.com/or81ynez/MaennerML/assets/131467070/81cc26c7-e098-40c4-b8c5-0a85e8417bec">
+<img width="334" alt="Bildschirmfoto 2023-06-29 um 17 43 46" src="https://github.com/or81ynez/MaennerML/assets/131467070/53d734ac-d976-4ce1-ad5b-21aaff73d461">
+
 
 
 # 4.Datenverarbeitung und Modellbildung
+*
+*
 
 # 5.Entwicklungsphasen
-
+* Recherche und Datenauswahl: Wir führten umfangreiche Recherchen durch, um herauszufinden, welche Daten sich am besten für unseren Zweck eignen. Wir untersuchten verschiedene Datenquellen, wie beispielsweise Sensoren oder APIs, um genaue Informationen über das aktuell genutzte Transportmittel zu erhalten.
+* Datensammlung: Die Sammlung ausreichender Daten erwies sich als eine Herausforderung. Wir benötigten eine große Menge an qualitativ hochwertigen Daten, um unsere App effektiv zu trainieren. Dabei stellten wir fest, dass wir zu Beginn fehlerhafte Daten aufgenommen hatten. Dies erforderte, dass wir die Daten löschen und den Sammelprozess erneut starten mussten, um genaue und zuverlässige Informationen zu erhalten.
+* Datenbereinigung und -verarbeitung: Nachdem wir die gesammelten Daten hatten, mussten wir sie bereinigen und aufbereiten, um sie für die spätere Verarbeitung optimal zu nutzen. Dies beinhaltete das Entfernen von Rauschen, Ausreißern oder inkonsistenten Datenpunkten. Wir verwendeten verschiedene Datenverarbeitungstechniken und Algorithmen, um sicherzustellen, dass die Daten qualitativ hochwertig und repräsentativ waren.
+* Modellbildung und Algorithmusauswahl: Ein weiterer wichtiger Schritt bestand darin, ein Modell zu entwickeln, das in der Lage ist, das aktuelle Transportmittel zu erkennen. Wir haben verschiedene Algorithmen und Machine-Learning-Techniken evaluiert, um die beste Leistung und Genauigkeit zu erzielen. Dies erforderte eine sorgfältige Auswahl und Anpassung des Modells an unsere spezifischen Anforderungen.
+* Validierung und Optimierung: Nach der Modellbildung haben wir das System umfangreich validiert, um sicherzustellen, dass es zuverlässig und genau funktioniert. Dies beinhaltete die Verwendung von Testdaten und die Überprüfung der Ergebnisse im Vergleich zu den tatsächlichen Transportmitteln. Wir haben das Modell iterativ optimiert und verbessert, um eine höhere Genauigkeit und Robustheit zu erreichen.
+* Während des gesamten Entwicklungsprozesses waren wir mit Herausforderungen konfrontiert, die es erforderten, kreative Lösungen zu finden. Dazu gehörten auch die Zusammenarbeit im Team, das Überwinden technischer Hindernisse und das kontinuierliche Feedback von Testnutzern. Durch unsere Bemühungen und die iterative Entwicklung kon
 # 6.Funktionalitäten
 
 # 7. Testing und Validierung
