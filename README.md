@@ -18,4 +18,12 @@ Schwerpunkt der App : #
 
 
 * Custom Dual Transportation Mode Detection by Smartphone Devices Exploiting Sensor Diversity  von : Claudia Carpineti, Vincenzo Lomonaco, Luca Bedogni, Marco Di Felice, Luciano Bononi Department of Computer Science and Engineering, University of Bologna, Italy
-* Inhalt des artikels: Der Artikel beschäftigt sich mit der Entwicklung einer Individuellen Erkennungsmethode für zwei Transportmodi mithilfe von Smartphones. Die Autoren nutzen die Vielfalt der Sensoren in Smartphones, wie Beschleunigungsmesser und Gyroskope, um charakteristische Merkmale der Transportmodi zu erfassen. Durch die Kombination verschiedener Sensoren werden präzisere und zuverlässigere Erkennungsergebnisse erzielt. Die entwickelte Methode wird anhand einer umfangreichen Testdatensammlung evaluiert und erreicht hohe Erkennungsgenauigkeiten für die zwei spezifischen Transportmodi. Die Ergebnisse zeigen das Potenzial der Sensorvielfalt in Smartphones für die maßgeschneiderte Erkennung von Transportmodi. Die Autoren betonen die Bedeutung dieser Methode für die Optimierung von Mobilitätsanwendung und die Verbesserung des individuellen Reiseverhaltens. Insgesamt zeigt der Artikel, wie Smartphone-Geräte durch die Ausnutzung der Sensorvielfalt eine maßgeschneiderte Erkennung von Transportmodi ermöglichen können. 
+* Inhalt des artikels: Der Artikel beschäftigt sich mit der Entwicklung einer Individuellen Erkennungsmethode für zwei Transportmodi mithilfe von Smartphones. Die Autoren nutzen die Vielfalt der Sensoren in Smartphones, wie Beschleunigungsmesser und Gyroskope, um charakteristische Merkmale der Transportmodi zu erfassen. Durch die Kombination verschiedener Sensoren werden präzisere und zuverlässigere Erkennungsergebnisse erzielt. Die entwickelte Methode wird anhand einer umfangreichen Testdatensammlung evaluiert und erreicht hohe Erkennungsgenauigkeiten für die zwei spezifischen Transportmodi. Die Ergebnisse zeigen das Potenzial der Sensorvielfalt in Smartphones für die maßgeschneiderte Erkennung von Transportmodi. Die Autoren betonen die Bedeutung dieser Methode für die Optimierung von Mobilitätsanwendung und die Verbesserung des individuellen Reiseverhaltens. Insgesamt zeigt der Artikel, wie Smartphone-Geräte durch die Ausnutzung der Sensorvielfalt eine maßgeschneiderte Erkennung von Transportmodi ermöglichen können.
+
+
+# Zeitlicher Ablauf der Entwicklug
+
+<img width="875" alt="Bildschirmfoto 2023-06-29 um 12 18 24" src="https://github.com/or81ynez/MaennerML/assets/131467070/a315bd50-36c8-4f95-9e14-9e4ca4eae83e">
+
+
+
