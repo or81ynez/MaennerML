@@ -59,9 +59,10 @@ Schwerpunkt der App : #
 * Validierung und Optimierung: Nach der Modellbildung haben wir das System umfangreich validiert, um sicherzustellen, dass es zuverlässig und genau funktioniert. Dies beinhaltete die Verwendung von Testdaten und die Überprüfung der Ergebnisse im Vergleich zu den tatsächlichen Transportmitteln. Wir haben das Modell iterativ optimiert und verbessert, um eine höhere Genauigkeit und Robustheit zu erreichen.
 * Während des gesamten Entwicklungsprozesses waren wir mit Herausforderungen konfrontiert, die es erforderten, kreative Lösungen zu finden. Dazu gehörten auch die Zusammenarbeit im Team, das Überwinden technischer Hindernisse und das kontinuierliche Feedback von Testnutzern. Durch unsere Bemühungen und die iterative Entwicklung kon
 # 6.Funktionalitäten
+- 
 
 # 7. Testing und Validierung
-
+- 
 # 8. Zukünfitge Erweiterungen : 
 
 * Eine Möglichkeit besteht darin, den eigenen Status während der Autofahrt automatisch an Kontakte zu übermitteln, um sicherzustellen, dass man während der Fahrt nicht abgelenkt wird und keine Anrufe entgegennimmt.
