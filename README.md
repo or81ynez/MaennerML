@@ -4,8 +4,6 @@
 
 Schwerpunkt der App : #
 
-
-1. Schritt: Resarche für unsere App
    # Wichtige Artikel 
 
 * A Deep Learning Model for Transportation Mode Detection Based on Smartphone Sensing Data von : Xiaoyuan Liang , Yuchuan Zhang, Guiling Wang, and Songhua Xu
@@ -26,4 +24,32 @@ Schwerpunkt der App : #
 <img width="875" alt="Bildschirmfoto 2023-06-29 um 12 18 24" src="https://github.com/or81ynez/MaennerML/assets/131467070/a315bd50-36c8-4f95-9e14-9e4ca4eae83e">
 
 
+# 1.Projektübersicht : Unsere App zielt drauf ab, das aktuell verwendete Transportmittel zu erkennen. 
+* Das Ziel unserer App ist es, Nutzern in Echtzeit relevante Informationen und praktische Lösungen für ihre individuellen Transportbedürfnisse zu liefern
+  
+# 2.Technologien und Tools
 
+
+
+# 3.Datenerfassung 
+
+![IMG_2953](https://github.com/or81ynez/MaennerML/assets/131467070/5e91b805-4fe8-4473-ae8a-e73305cfd540)
+![IMG_2955](https://github.com/or81ynez/MaennerML/assets/131467070/f9fe43f1-f7af-45c7-9518-98d1d57f6811)
+
+
+# 4.Datenverarbeitung und Modellbildung
+
+# 5.Entwicklungsphasen
+
+# 6.Funktionalitäten
+
+# 7. Testing und Validierung
+
+# 8. Zukünfitge Erweiterungen : 
+
+* Eine Möglichkeit besteht darin, den eigenen Status während der Autofahrt automatisch an Kontakte zu übermitteln, um sicherzustellen, dass man während der Fahrt nicht abgelenkt wird und keine Anrufe entgegennimmt.
+* Des Weiteren kann die App die beste Route sowohl für Autofahrten als auch für Fahrradfahrten berechnen wodurch sie sich als praktischer begleiter im Straßenverkehr erweist.
+* Auch bei der Nutzung öffentlicher Verkehrsmittel erweist sich die App nützlich, indem sie die besten Verbindungsmöglichkeiten und Routenempfehlungen bietet. 
+
+
+# 
