@@ -6,7 +6,8 @@ import matplotlib as plt
 import seaborn as sns
 import time
 import numpy as np
-
+import streamlit as st
+from streamlit_lottie import st_lottie
 #Functions 
 
 #Tranform accelerometer and gyroscope data to one dataframe
@@ -83,75 +84,52 @@ def map_data(df):
     return my_map
 
 
-#Stream data
-from flask import Flask, request
-import dash
-from dash.dependencies import Output, Input
-from dash import dcc, html, dcc
-from datetime import datetime
-import json
-import plotly.graph_objs as go
-from collections import deque
+### Streamlit Area
+### Page config
+st.set_page_config(page_title="Mapping your Data", layout="wide", page_icon=":world_map:", initial_sidebar_state="collapsed")
+bg_gradient = '''
+<style>
+[data-testid="stAppViewContainer"] {
+background: linear-gradient(#e66465, #9198e5);
+}
+</style>
+'''
+st.markdown(bg_gradient, unsafe_allow_html=True)
+###
 
-#10.100.213.5
-def stream_data():
-   MAX_DATA_POINTS = 1000
-   UPDATE_FREQ_MS = 100
-   time = deque(maxlen=MAX_DATA_POINTS)
-   longitute = deque(maxlen=MAX_DATA_POINTS)
-   latitute = deque(maxlen=MAX_DATA_POINTS)
-   
-   app.layout = html.Div(
-         [
-               dcc.Markdown(
-         children="""
-         # Live Sensor Readings
-         Streamed from Sensor Logger: tszheichoi.com/sensorlogger
-         """
-         ),
-         dcc.Graph(id="live_graph"),
-         dcc.Interval(id="counter", interval=UPDATE_FREQ_MS),
-         ]
-         )
-   @app.callback(Output("live_graph", "figure"), Input("counter", "n_intervals"))
-   def update_graph(_counter):
-    data = [
-         go.Scatter(x=list(time), y=list(d), name=name)
-         for d, name in zip([longitute, latitute], ["X", "Y"])
-         ]
-    graph = {
-         "data": data,
-         "layout": go.Layout(
-         {
-              "xaxis": {"type": "date"},
-              "yaxis": {"title": "Acceleration ms<sup>-2</sup>"},
-              }
-              ),
-              }
-    if (
-         len(time) > 0
-         ):  #  cannot adjust plot ranges until there is at least one data point
-         graph["layout"]["xaxis"]["range"] = [min(time), max(time)]
-         graph["layout"]["yaxis"]["range"] = [
-              min(longitute + latitute),
-              max(longitute + latitute),
-              ]
-         return graph
-    @server.route("/data", methods=["POST"])
-    def data():  # listens to the data streamed from the sensor logger
-        if str(request.method) == "POST":
-            print(f'received data: {request.data}')
-            data = json.loads(request.data)
-            for d in data['payload']:
-                 if (
-                      d.get("name", None) == "accelerometer"
-                      ):  #  modify to access different sensors
-                      ts = datetime.fromtimestamp(d["time"] / 1000000000)
-                      if len(time) == 0 or ts > time[-1]:
-                        time.append(ts)
-                        # modify the following based on which sensor is accessed, log the raw json for guidance
-                        longitute.append(d["values"]["x"])
-                        latitute.append(d["values"]["y"])
-                        return "success"
-                      if __name__ == "__main__":
-                          app.run_server(port=8000, host="0.0.0.0")
+#with open('style.css') as f:
+#    st.markdown('<style>{}</style>'.format(f.read()), unsafe_allow_html=True)
+###
+st.header("Dein Standort wurde gefunden")
+with st.container():
+    st.write("---")
+    st.subheader("Now lets see, if you said the truth!")
+    st.write("Now submit your data and our model will predict your mobility type. No worries, you can import json or csv files!")
+    def main():
+        uploaded_file = st.file_uploader("Please upload a sensor data file. JSON or .zip containing CSVs are allowed", accept_multiple_files=False)
+        if st.button("Classify me!"):
+            prediction_data, gps, metric_data, raw_predictions = process_data(uploaded_file)
+
+            st.subheader("Der Ursprung deiner Daten")
+            st.write("Keine Sorge, nur du kannst diese Daten sehen, wir haben nicht genug Geld für Streamlit Pro, daher können wir die nicht speichern ;D")
+            st.map(gps)
+
+            st.subheader("Dein Fortbewegungsgraph")
+            output_string = ""
+            
+            graph = graphviz.Digraph()
+            i = 0
+            if len(prediction_data) > 1:
+                while i < len(prediction_data) -1:
+                    graph.edge((prediction_data[i][0] + " " + str(prediction_data[i][1]) + " min"), (prediction_data[i+1][0] + " " + str(prediction_data[i+1][1]) + " min"))
+                    i += 1
+            else:
+                graph.edge(prediction_data[i][0] + " " + str(prediction_data[i][1]) + " min", "End")
+            st.write(output_string)
+            st.graphviz_chart(graph)
+
+            st.subheader("Deine Fortbewegungsverteilung")
+                
+    if __name__ == "__main__":
+        main()
+    st.write("---")
