@@ -1,3 +1,11 @@
+#importing necessery libraries for future analysis of the dataset
+import pandas as pd
+import matplotlib.pyplot as plt
+import matplotlib as plt
+import seaborn as sns
+import time
+import numpy as np
+
 #Tranform accelerometer and gyroscope data to one dataframe
 def transform_data_acceleration(file, format, type):
     if format == 'json':
@@ -32,9 +40,6 @@ def transform_data_location(file, format, type):
     location = df[df['sensor'] == 'Location']
     location.reset_index(drop=True, inplace=True)
     location = location.drop(columns = ['sensor', 'z', 'y', 'x', 'relativeAltitude', 'pressure', 'version', 'device name', 'recording time', 'platform', 'appVersion', 'device id', 'sensors', 'sampleRateMs', 'yaw', 'qx', 'qz', 'roll', 'qw', 'qy', 'pitch'])
-
-    
-    
     location.index = pd.to_datetime(location['time'], unit = 'ns',errors='ignore')
     location.drop(columns=['time'], inplace=True)
     location['Type'] = type
@@ -57,3 +62,4 @@ def combine_into_df(dfs):
     combined_df = pd.concat([cut_into_windows(df) for df in dfs])  # Apply cut_into_window to each DataFrame and concatenate them
     combined_df.reset_index(drop=True, inplace=True)  # Reset the index of the combined DataFrame
     return combined_df
+
