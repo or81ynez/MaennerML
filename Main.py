@@ -10,6 +10,7 @@ import streamlit as st
 from streamlit_folium import st_folium
 import plotly.express as px
 import torch
+
 model_tree = 'Models/KNN_2023_06_02'
 model = torch.load(model_tree)
 
