@@ -7,7 +7,12 @@ import seaborn as sns
 import time
 import numpy as np
 import streamlit as st
-from streamlit_lottie import st_lottie
+from streamlit_folium import st_folium
+import plotly.express as px
+import torch
+model_tree = 'Models/KNN_2023_06_02'
+model = torch.load(model_tree)
+
 #Functions 
 
 #Tranform accelerometer and gyroscope data to one dataframe
@@ -55,26 +60,28 @@ def transform_data_location(file, format):
     #location['Type'] = type
     return location
 
-#Cut data into windows of 1 minutes and calculate min, max, mean and std
-def create_feature_df(df, type):   
-    min_values = df.resample('1Min').min(numeric_only=True)
-    max_values = df.resample('1Min').max(numeric_only=True)
-    mean_values = df.resample('1Min').mean(numeric_only=True)
-    std_values = df.resample('1Min').std(numeric_only=True)
+#Cut data into windows of 5 seconds and calculate min, max, mean and std
+def create_feature_df(df):   
+    min_values = df.resample('5s').min(numeric_only=True)
+    max_values = df.resample('5s').max(numeric_only=True)
+    mean_values = df.resample('5s').mean(numeric_only=True)
+    std_values = df.resample('5s').std(numeric_only=True)
     #columns_to_drop = df.columns.difference(['Magnitude_acce','speed','x_acce', 'x_gyro','y_acce', 'y_gyro', 'z_acce', 'z_gyro','x','y','z'])
     columns_to_drop = df.columns.difference(['Magnitude_acce','x_acce', 'x_gyro','y_acce', 'y_gyro', 'z_acce', 'z_gyro','x','y','z'])
     for df in [min_values, max_values, mean_values, std_values]:
         df.drop(columns=columns_to_drop, inplace=True)
     feature_df = pd.merge(pd.merge(min_values, max_values, suffixes = ('_min', '_max'), on = 'time'), pd.merge(mean_values, std_values, suffixes = ('_mean', '_std'), on = 'time'), on = 'time')
-    feature_df['Type'] = type
-
     return feature_df
 
-#Combine 3-minutes windows data into one DataFrame (only in case there are more than one df)
-def combine_into_df(dfs, type):
-    combined_df = pd.concat([create_feature_df(df, type) for df in dfs])  # Apply cut_into_window to each DataFrame and concatenate them
-    #combined_df.reset_index(drop=True, inplace=True)  # Reset the index of the combined DataFrame
-    return combined_df
+#Process data for prediction
+def process_data_prediction(df):
+    df = transform_data_acceleration(df)
+    df_prep = create_feature_df(df)
+    return df_prep
+
+def process_data_location(df):
+    df = transform_data_location(df)
+    return df
 
 #Map data 
 def map_data(df):
@@ -83,6 +90,11 @@ def map_data(df):
     folium.PolyLine(coords, color="blue", weight=5.0).add_to(my_map)
     return my_map
 
+#read data from url
+@st.experimental_memo
+def get_data() -> pd.DataFrame:
+    url = "http://10.100.213.5:8000/data"
+    return pd.read_json(url)
 
 ### Streamlit Area
 ### Page config
@@ -103,32 +115,19 @@ st.markdown(bg_gradient, unsafe_allow_html=True)
 st.header("Dein Standort wurde gefunden")
 with st.container():
     st.write("---")
-    st.subheader("Now lets see, if you said the truth!")
-    st.write("Now submit your data and our model will predict your mobility type. No worries, you can import json or csv files!")
+    #st.subheader("Du bist gerade auf...")
+    st.write("Fügen Sie bitte ihre Datei hinzu")
     def main():
-        uploaded_file = st.file_uploader("Please upload a sensor data file. JSON or .zip containing CSVs are allowed", accept_multiple_files=False)
+        uploaded_file = st.file_uploader("Laden Sie eine JSON Datei hoch!", accept_multiple_files=False)
         if st.button("Classify me!"):
-            prediction_data, gps, metric_data, raw_predictions = process_data(uploaded_file)
-
-            st.subheader("Der Ursprung deiner Daten")
-            st.write("Keine Sorge, nur du kannst diese Daten sehen, wir haben nicht genug Geld für Streamlit Pro, daher können wir die nicht speichern ;D")
-            st.map(gps)
+            prediction_data =  process_data_prediction(uploaded_file)
+            location_data = process_data_location(uploaded_file)
 
             st.subheader("Dein Fortbewegungsgraph")
-            output_string = ""
+            map_data(location_data)
             
-            graph = graphviz.Digraph()
-            i = 0
-            if len(prediction_data) > 1:
-                while i < len(prediction_data) -1:
-                    graph.edge((prediction_data[i][0] + " " + str(prediction_data[i][1]) + " min"), (prediction_data[i+1][0] + " " + str(prediction_data[i+1][1]) + " min"))
-                    i += 1
-            else:
-                graph.edge(prediction_data[i][0] + " " + str(prediction_data[i][1]) + " min", "End")
-            st.write(output_string)
-            st.graphviz_chart(graph)
-
-            st.subheader("Deine Fortbewegungsverteilung")
+            tree_predictions = model_tree.predict(prediction_data)
+            st.caption("Du bist gerade auf dem " + tree_predictions + "!")
                 
     if __name__ == "__main__":
         main()
