@@ -9,7 +9,7 @@ import time
 import numpy as np
 import streamlit as st
 #from streamlit_folium import st_folium
-import plotly.express as px
+#import plotly.express as px
 import torch
 from PIL import Image
 from streamlit_lottie import st_lottie
