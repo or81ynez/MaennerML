@@ -14,7 +14,7 @@ from PIL import Image
 from streamlit_lottie import st_lottie
 import requests
 
-model_tree = 'E:\Download\Studium\ML4B\ML4B_Maenner_MoveMate\MaennerML\Tree_Model.pkl'
+model_tree = 'Tree_Model.pkl'
 model = torch.load(model_tree)
 
 #Functions 
