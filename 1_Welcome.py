@@ -14,8 +14,8 @@ from PIL import Image
 from streamlit_lottie import st_lottie
 import requests
 
-#model_tree = 'Tree_Model.pkl'
-#model = torch.load(model_tree)
+model_tree = 'Tree_Model.pkl'
+model = torch.load(model_tree)
 
 @st.cache_data
 
