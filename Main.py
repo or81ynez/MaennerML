@@ -10,6 +10,9 @@ import streamlit as st
 from streamlit_folium import st_folium
 import plotly.express as px
 import torch
+from PIL import Image
+from streamlit_lottie import st_lottie
+import requests
 
 model_tree = 'Tree_Model.pkl'
 model = torch.load(model_tree)
@@ -97,39 +100,59 @@ def get_data() -> pd.DataFrame:
     url = "http://10.100.213.5:8000/data"
     return pd.read_json(url)
 
-### Streamlit Area
-### Page config
-st.set_page_config(page_title="Mapping your Data", layout="wide", page_icon=":world_map:", initial_sidebar_state="collapsed")
-bg_gradient = '''
-<style>
-[data-testid="stAppViewContainer"] {
-background: linear-gradient(#e66465, #9198e5);
-}
-</style>
-'''
-st.markdown(bg_gradient, unsafe_allow_html=True)
-###
+#Streamlit App code below
 
-#with open('style.css') as f:
-#    st.markdown('<style>{}</style>'.format(f.read()), unsafe_allow_html=True)
-###
-st.header("Dein Standort wurde gefunden")
-with st.container():
-    st.write("---")
-    #st.subheader("Du bist gerade auf...")
-    st.write("Fügen Sie bitte ihre Datei hinzu")
-    def main():
-        uploaded_file = st.file_uploader("Laden Sie eine JSON Datei hoch!", accept_multiple_files=False)
-        if st.button("Classify me!"):
-            prediction_data =  process_data_prediction(uploaded_file)
-            location_data = process_data_location(uploaded_file)
+def main():
+    st.set_page_config(page_title="MoveMate", page_icon=":oncoming_automobile:", layout="wide", initial_sidebar_state="collapsed")
 
-            st.subheader("Dein Fortbewegungsgraph")
-            map_data(location_data)
+    def load_lottieurl(url):
+        r = requests.get(url)
+        if r.status_code != 200:
+            return None
+        return r.json()
+    
+    logo = Image.open("logo.jpg")
+
+    st.sidebar.success("Menu")
+
+    with st.container():
+        text_column, image_column = st.columns((2,1))
+        with text_column:
+            st.title("MoveMate")
+            st.header("Keep everyone on track")
+            st.markdown("[See our GitHub Repository -->] (https://github.com/or81ynez/MaennerML)")
+        with image_column:
+            st.image(logo)
+
+    with st.container():
+        st.write("---")
+        st.write("With our MoveMateApp you will be able to determine the type of transport on which you move.")
+        st.write("But in order to get started we advise you to read the Instructions section on the left in the menu!")
+    with st.container():
+        st.write("---")
+        left_column, right_column = st.columns(2)
+        lottie_coding = load_lottieurl("https://assets3.lottiefiles.com/packages/lf20_xbf1be8x.json")
+        with left_column:
+            st.write("We hope you managed to record your movement data. Let's try to determine the type of your transport!")
             
-            tree_predictions = model_tree.predict(prediction_data)
-            st.caption("Du bist gerade auf dem " + tree_predictions + "!")
+            uploaded_file = st.file_uploader("Drop your JSON file here!", accept_multiple_files=False,  type="json")
+            if uploaded_file is not None:
+                prediction_data =  process_data_prediction(uploaded_file)
+                location_data = process_data_location(uploaded_file)
+                st.subheader("Your travel graph")
+                map_data(location_data)
+                tree_predictions = model_tree.predict(prediction_data)
+                st.caption("You are using" + tree_predictions + "!")
+            
+            else:
+                st.write("Upload a JSON file!")
+        with right_column:
+                st_lottie(lottie_coding, height=300, key="coding")
+        
+
+if __name__ == "__main__":
+    main()
+
+
+
                 
-    if __name__ == "__main__":
-        main()
-    st.write("---")
