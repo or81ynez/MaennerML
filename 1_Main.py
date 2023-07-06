@@ -122,7 +122,7 @@ def main():
         with text_column:
             st.title("MoveMate")
             st.header("Keep everyone on track")
-            st.markdown("[See our GitHub Repository ⇒] (https://github.com/or81ynez/MaennerML)")
+            st.markdown("See our GitHub Repository ⇒ (https://github.com/or81ynez/MaennerML)")
         with image_column:
             st.image(logo)
 
