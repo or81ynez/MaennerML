@@ -81,7 +81,7 @@ def create_feature_df(df):
 
 #Process data for prediction
 def process_data_prediction(df):
-    df = transform_data_acceleration(df)
+    df = transform_data_acceleration(df,format)
     df_prep = create_feature_df(df)
     return df_prep
 
