@@ -6,14 +6,13 @@ import matplotlib as plt
 import seaborn as sns
 import time
 import numpy as np
-import dash
-from dash.dependencies import Output, Input
-from dash import dcc, html, dcc
-from datetime import datetime
-import json
-import plotly.graph_objs as go
-from collections import deque
-from flask import Flask, request
+import streamlit as st
+from streamlit_folium import st_folium
+import plotly.express as px
+import torch
+
+model_tree = 'Models/KNN_2023_06_02'
+model = torch.load(model_tree)
 
 #Functions 
 
@@ -62,26 +61,28 @@ def transform_data_location(file, format):
     #location['Type'] = type
     return location
 
-#Cut data into windows of 1 minutes and calculate min, max, mean and std
-def create_feature_df(df, type):   
-    min_values = df.resample('1Min').min(numeric_only=True)
-    max_values = df.resample('1Min').max(numeric_only=True)
-    mean_values = df.resample('1Min').mean(numeric_only=True)
-    std_values = df.resample('1Min').std(numeric_only=True)
+#Cut data into windows of 5 seconds and calculate min, max, mean and std
+def create_feature_df(df):   
+    min_values = df.resample('5s').min(numeric_only=True)
+    max_values = df.resample('5s').max(numeric_only=True)
+    mean_values = df.resample('5s').mean(numeric_only=True)
+    std_values = df.resample('5s').std(numeric_only=True)
     #columns_to_drop = df.columns.difference(['Magnitude_acce','speed','x_acce', 'x_gyro','y_acce', 'y_gyro', 'z_acce', 'z_gyro','x','y','z'])
     columns_to_drop = df.columns.difference(['Magnitude_acce','x_acce', 'x_gyro','y_acce', 'y_gyro', 'z_acce', 'z_gyro','x','y','z'])
     for df in [min_values, max_values, mean_values, std_values]:
         df.drop(columns=columns_to_drop, inplace=True)
     feature_df = pd.merge(pd.merge(min_values, max_values, suffixes = ('_min', '_max'), on = 'time'), pd.merge(mean_values, std_values, suffixes = ('_mean', '_std'), on = 'time'), on = 'time')
-    feature_df['Type'] = type
-
     return feature_df
 
-#Combine 3-minutes windows data into one DataFrame (only in case there are more than one df)
-def combine_into_df(dfs, type):
-    combined_df = pd.concat([create_feature_df(df, type) for df in dfs])  # Apply cut_into_window to each DataFrame and concatenate them
-    #combined_df.reset_index(drop=True, inplace=True)  # Reset the index of the combined DataFrame
-    return combined_df
+#Process data for prediction
+def process_data_prediction(df):
+    df = transform_data_acceleration(df)
+    df_prep = create_feature_df(df)
+    return df_prep
+
+def process_data_location(df):
+    df = transform_data_location(df)
+    return df
 
 #Map data 
 def map_data(df):
@@ -90,78 +91,45 @@ def map_data(df):
     folium.PolyLine(coords, color="blue", weight=5.0).add_to(my_map)
     return my_map
 
-#Stream data
-server = Flask(__name__)
-app = dash.Dash(__name__, server=server)
+#read data from url
+@st.experimental_memo
+def get_data() -> pd.DataFrame:
+    url = "http://10.100.213.5:8000/data"
+    return pd.read_json(url)
 
-MAX_DATA_POINTS = 1000
-UPDATE_FREQ_MS = 100
+### Streamlit Area
+### Page config
+st.set_page_config(page_title="Mapping your Data", layout="wide", page_icon=":world_map:", initial_sidebar_state="collapsed")
+bg_gradient = '''
+<style>
+[data-testid="stAppViewContainer"] {
+background: linear-gradient(#e66465, #9198e5);
+}
+</style>
+'''
+st.markdown(bg_gradient, unsafe_allow_html=True)
+###
 
-time = deque(maxlen=MAX_DATA_POINTS)
-accel_x = deque(maxlen=MAX_DATA_POINTS)
-accel_y = deque(maxlen=MAX_DATA_POINTS)
-accel_z = deque(maxlen=MAX_DATA_POINTS)
+#with open('style.css') as f:
+#    st.markdown('<style>{}</style>'.format(f.read()), unsafe_allow_html=True)
+###
+st.header("Dein Standort wurde gefunden")
+with st.container():
+    st.write("---")
+    #st.subheader("Du bist gerade auf...")
+    st.write("Fügen Sie bitte ihre Datei hinzu")
+    def main():
+        uploaded_file = st.file_uploader("Laden Sie eine JSON Datei hoch!", accept_multiple_files=False)
+        if st.button("Classify me!"):
+            prediction_data =  process_data_prediction(uploaded_file)
+            location_data = process_data_location(uploaded_file)
 
-app.layout = html.Div(
-	[
-		dcc.Markdown(
-			children="""
-			# Live Sensor Readings
-			Streamed from Sensor Logger: tszheichoi.com/sensorlogger
-		"""
-		),
-		dcc.Graph(id="live_graph"),
-		dcc.Interval(id="counter", interval=UPDATE_FREQ_MS),
-	]
-)
-
-
-@app.callback(Output("live_graph", "figure"), Input("counter", "n_intervals"))
-def update_graph(_counter):
-	data = [
-		go.Scatter(x=list(time), y=list(d), name=name)
-		for d, name in zip([accel_x, accel_y, accel_z], ["X", "Y", "Z"])
-	]
-
-	graph = {
-		"data": data,
-		"layout": go.Layout(
-			{
-				"xaxis": {"type": "date"},
-				"yaxis": {"title": "Acceleration ms<sup>-2</sup>"},
-			}
-		),
-	}
-	if (
-		len(time) > 0
-	):  #  cannot adjust plot ranges until there is at least one data point
-		graph["layout"]["xaxis"]["range"] = [min(time), max(time)]
-		graph["layout"]["yaxis"]["range"] = [
-			min(accel_x + accel_y + accel_z),
-			max(accel_x + accel_y + accel_z),
-		]
-
-	return graph
-
-
-@server.route("/data", methods=["POST"])
-def data():  # listens to the data streamed from the sensor logger
-	if str(request.method) == "POST":
-		print(f'received data: {request.data}')
-		data = json.loads(request.data)
-		for d in data['payload']:
-			if (
-				d.get("name", None) == "accelerometer"
-			):  #  modify to access different sensors
-				ts = datetime.fromtimestamp(d["time"] / 1000000000)
-				if len(time) == 0 or ts > time[-1]:
-					time.append(ts)
-					# modify the following based on which sensor is accessed, log the raw json for guidance
-					accel_x.append(d["values"]["x"])
-					accel_y.append(d["values"]["y"])
-					accel_z.append(d["values"]["z"])
-	return "success"
-
-
-if __name__ == "__main__":
-	app.run_server(port=8000, host="0.0.0.0")
+            st.subheader("Dein Fortbewegungsgraph")
+            map_data(location_data)
+            
+            tree_predictions = model_tree.predict(prediction_data)
+            st.caption("Du bist gerade auf dem " + tree_predictions + "!")
+                
+    if __name__ == "__main__":
+        main()
+    st.write("---")
