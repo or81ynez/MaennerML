@@ -137,7 +137,7 @@ def main():
         with left_column:
             st.write("We hope you managed to record your movement data. Let's try to determine the type of your transport!")
             
-            uploaded_file = st.file_uploader("Drop your JSON file here!", accept_multiple_files=False,  type="json")
+            uploaded_file = st.file_uploader( accept_multiple_files=False,  type="json")
             if uploaded_file is not None:
                 prediction_data =  process_data_prediction(uploaded_file)
                 location_data = process_data_location(uploaded_file)
