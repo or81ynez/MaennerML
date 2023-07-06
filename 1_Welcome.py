@@ -1,5 +1,6 @@
 #importing necessery libraries for future analysis of the dataset
 #import folium
+import pickle
 import pandas as pd
 import matplotlib.pyplot as plt
 import matplotlib as plt
@@ -14,7 +15,7 @@ from PIL import Image
 from streamlit_lottie import st_lottie
 import requests
 
-model_tree = 'Tree_Model.pkl'
+model_tree = pickle.load('Tree_Model.pkl')
 model = torch.load(model_tree)
 
 #Functions 
