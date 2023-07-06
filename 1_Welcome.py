@@ -14,7 +14,7 @@ from PIL import Image
 from streamlit_lottie import st_lottie
 import requests
 
-model_tree = 'Tree_Model.pkl'
+model_tree = 'E:\Download\Studium\ML4B\ML4B_Maenner_MoveMate\MaennerML\Tree_Model.pkl'
 model = torch.load(model_tree)
 
 @st.cache_data
@@ -22,11 +22,9 @@ model = torch.load(model_tree)
 #Functions 
 
 #Tranform accelerometer and gyroscope data to one dataframe
-def transform_data_acceleration(file, format):
-    if format == 'json':
-        df = pd.read_json(file)
-    else:
-        df = pd.read_csv(file)  
+def transform_data_acceleration(file):
+        
+    df = pd.read_json(file) 
         
     acce = df[df['sensor'] == 'Accelerometer']
     acce.reset_index(drop=True, inplace=True)   
@@ -81,7 +79,7 @@ def create_feature_df(df):
 
 #Process data for prediction
 def process_data_prediction(df):
-    df = transform_data_acceleration(df,format)
+    df = transform_data_acceleration(df)
     df_prep = create_feature_df(df)
     return df_prep
 
