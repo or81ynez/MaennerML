@@ -1,5 +1,5 @@
 #importing necessery libraries for future analysis of the dataset
-import folium
+#import folium
 import pandas as pd
 import matplotlib.pyplot as plt
 import matplotlib as plt
@@ -86,11 +86,11 @@ def process_data_location(df):
     return df
 
 #Map data 
-def map_data(df):
-    coords = [(row.latitude, row.longitude) for _, row in df.iterrows()]
-    my_map = folium.Map(location=[df.latitude.mean(), df.longitude.mean()], zoom_start=16)
-    folium.PolyLine(coords, color="blue", weight=5.0).add_to(my_map)
-    return my_map
+#def map_data(df):
+    #coords = [(row.latitude, row.longitude) for _, row in df.iterrows()]
+    #my_map = folium.Map(location=[df.latitude.mean(), df.longitude.mean()], zoom_start=16)
+    #folium.PolyLine(coords, color="blue", weight=5.0).add_to(my_map)
+    #return my_map
 
 #read data from url
 #@st.experimental_memo
