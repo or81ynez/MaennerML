@@ -97,10 +97,10 @@ def map_data(df):
     return my_map
 
 #read data from url
-@st.experimental_memo
-def get_data() -> pd.DataFrame:
-    url = "http://10.100.213.5:8000/data"
-    return pd.read_json(url)
+#@st.experimental_memo
+#def get_data() -> pd.DataFrame:
+#    url = "http://10.100.213.5:8000/data"
+#    return pd.read_json(url)
 
 #Streamlit App code below
 
